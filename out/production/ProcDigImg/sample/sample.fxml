@@ -14,12 +14,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="825.0" prefWidth="961.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="825.0" prefWidth="961.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <top>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER_RIGHT">
          <children>
             <VBox prefHeight="200.0" prefWidth="100.0" />
-            <Label text="R:" textFill="#bf1919">
+            <Label fx:id="label_R" text="R:" textFill="#bf1919">
                <HBox.margin>
                   <Insets right="50.0" />
                </HBox.margin>
@@ -27,7 +27,7 @@
                   <Font size="40.0" />
                </font>
             </Label>
-            <Label text="G:" textFill="#3ad00d">
+            <Label fx:id="label_G" text="G:" textFill="#3ad00d">
                <HBox.margin>
                   <Insets right="50.0" />
                </HBox.margin>
@@ -35,7 +35,7 @@
                   <Font size="40.0" />
                </font>
             </Label>
-            <Label text="B:" textFill="#1ba9c9">
+            <Label fx:id="label_B" text="B:" textFill="#1ba9c9">
                <HBox.margin>
                   <Insets right="50.0" />
                </HBox.margin>
@@ -135,7 +135,7 @@
          <children>
             <VBox prefHeight="700.0" prefWidth="238.0">
                <children>
-                  <Button fx:id="image1_button" alignment="CENTER" mnemonicParsing="false" text="Imagem 1">
+                  <Button fx:id="image1_button" alignment="CENTER" mnemonicParsing="false" onAction="#openImage1" text="Imagem 1">
                      <VBox.margin>
                         <Insets bottom="10.0" left="80.0" />
                      </VBox.margin>
@@ -153,7 +153,7 @@
             </VBox>
             <VBox layoutX="10.0" layoutY="10.0" prefHeight="700.0" prefWidth="238.0">
                <children>
-                  <Button fx:id="image2_button" mnemonicParsing="false" text="Imagem 2">
+                  <Button fx:id="image2_button" mnemonicParsing="false" onAction="#openImage2" text="Imagem 2">
                      <VBox.margin>
                         <Insets bottom="10.0" left="80.0" />
                      </VBox.margin>
