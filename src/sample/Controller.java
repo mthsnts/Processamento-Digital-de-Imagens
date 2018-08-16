@@ -86,10 +86,10 @@ public class Controller {
 	
 	private void getRgb(Image img, int x, int y){
 		try{
-		Color cor = img.getPixelReader().getColor(x-1, y-1);
+		Color cor = img.getPixelReader().getColor(x, y);
 		label_R.setText("R: " + (int) (cor.getRed()*255));
-		label_G.setText("G: " + (int) (cor.getRed()*255));
-		label_B.setText("B: " + (int) (cor.getRed()*255));
+		label_G.setText("G: " + (int) (cor.getGreen()*255));
+		label_B.setText("B: " + (int) (cor.getBlue()*255));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
