@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.image.ImageView?>
@@ -51,6 +52,20 @@
          <children>
             <Accordion>
               <panes>
+                  <TitledPane animated="false" text="Limiar">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="722.0" prefWidth="212.0">
+                           <children>
+                              <VBox layoutX="1.0" prefHeight="522.0" prefWidth="180.0">
+                                 <children>
+                                    <Slider fx:id="slider" value="5.0" />
+                                    <Button mnemonicParsing="false" onAction="#limiar" prefHeight="25.0" prefWidth="178.0" text="Limiar" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </TitledPane>
                 <TitledPane animated="false" text="Tons de cinza">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -66,7 +81,7 @@
                                                       <Insets left="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField prefHeight="25.0" prefWidth="34.0">
+                                                <TextField fx:id="r_percentage" prefHeight="25.0" prefWidth="34.0">
                                                    <HBox.margin>
                                                       <Insets bottom="10.0" left="10.0" />
                                                    </HBox.margin>
@@ -80,7 +95,7 @@
                                                       <Insets left="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField prefHeight="25.0" prefWidth="32.0">
+                                                <TextField fx:id="g_percentage" prefHeight="25.0" prefWidth="32.0">
                                                    <HBox.margin>
                                                       <Insets bottom="10.0" left="10.0" />
                                                    </HBox.margin>
@@ -94,19 +109,19 @@
                                                       <Insets left="10.0" />
                                                    </HBox.margin>
                                                 </Label>
-                                                <TextField prefHeight="25.0" prefWidth="35.0">
+                                                <TextField fx:id="b_percentage" prefHeight="25.0" prefWidth="35.0">
                                                    <HBox.margin>
                                                       <Insets bottom="10.0" left="10.0" />
                                                    </HBox.margin>
                                                 </TextField>
                                              </children>
                                           </HBox>
-                                          <Button mnemonicParsing="false" text="Aritimética">
+                                          <Button mnemonicParsing="false" onAction="#greyScaleMedian" text="Aritimética">
                                              <VBox.margin>
                                                 <Insets bottom="10.0" />
                                              </VBox.margin>
                                           </Button>
-                                          <Button mnemonicParsing="false" text="Ponderada" />
+                                          <Button mnemonicParsing="false" onAction="#greyScaleP" text="Ponderada" />
                                        </children>
                                     </VBox>
                                  </children>
@@ -144,7 +159,7 @@
                     <content>
                       <AnchorPane prefHeight="450.0" prefWidth="250.0">
                            <children>
-                              <ImageView fx:id="image_view_1" fitHeight="150.0" fitWidth="200.0" layoutX="25.0" layoutY="14.0" onMouseMoved="#rasterImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <ImageView fx:id="image_view_1" fitHeight="275.0" fitWidth="240.0" layoutX="25.0" layoutY="14.0" onMouseMoved="#rasterImg" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="175.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                     </content>
@@ -162,7 +177,7 @@
                      <content>
                         <AnchorPane prefHeight="450.0" prefWidth="250.0">
                            <children>
-                              <ImageView fx:id="image_view_2" fitHeight="150.0" fitWidth="200.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <ImageView fx:id="image_view_2" fitHeight="257.0" fitWidth="251.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="193.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </content>
@@ -171,7 +186,7 @@
             </VBox>
             <VBox layoutX="248.0" layoutY="10.0" prefHeight="700.0" prefWidth="238.0">
                <children>
-                  <Button fx:id="save_button" mnemonicParsing="false" text="Salvar">
+                  <Button fx:id="save_button" mnemonicParsing="false" onAction="#save" text="Salvar">
                      <VBox.margin>
                         <Insets bottom="10.0" left="80.0" />
                      </VBox.margin>
@@ -180,7 +195,7 @@
                      <content>
                         <AnchorPane prefHeight="450.0" prefWidth="250.0">
                            <children>
-                              <ImageView fx:id="image_view_3" fitHeight="150.0" fitWidth="200.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                              <ImageView fx:id="image_view_3" fitHeight="218.0" fitWidth="248.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="232.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </content>
