@@ -22,29 +22,29 @@ import utils.Pdi;
 
 public class Controller {
 
-	@FXML private Button image1_button;
 	@FXML private ImageView image_view_1;
-	@FXML private Button image2_button;
 	@FXML private ImageView image_view_2;
-	@FXML private Button save_button;
 	@FXML private ImageView image_view_3;
+
     @FXML private Label label_R;
     @FXML private Label label_G;
     @FXML private Label label_B;
+
     @FXML private TextField r_percentage;
     @FXML private TextField g_percentage;
     @FXML private TextField b_percentage;
+
     @FXML private Slider slider;
 	
     private File f;
-    private Image img_1;
-    private Image img_2;
-    private Image img_3;
-       
+    private Image img_1, img_2, img_3;
+
 	private File selectImage(){
 		FileChooser fileChooser = new FileChooser();
+
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter
 				("Imagens", "*.jpg", "*JPG", "**.png", "*PNG", "*.gif", "*.GIF", "*.bmp", "*.BMP"));
+		fileChooser.setInitialDirectory(new File("C://users/mathe/Desktop/Processamento-Digital-de-Imagens/src/utils/imgs"));
 		File img = fileChooser.showOpenDialog(null);
 		try{
 			if(img != null){
@@ -56,13 +56,12 @@ public class Controller {
 		return null;
 	}
 	
-	
+	@FXML
 	public void negativa(){
 		img_3 = Pdi.negativa(img_1);
 		updateImage3();
 	}
-	
-	
+
 	@FXML
 	public void limiar(){
 		double value = slider.getValue();
@@ -92,8 +91,7 @@ public class Controller {
 			image_view_2.setFitHeight(img_2.getHeight());
 		}
 	}
-	
-	
+
 	@FXML
 	private void updateImage3(){
 		image_view_3.setImage(img_3);
@@ -123,7 +121,7 @@ public class Controller {
 		if(img_3 == null){
 			FileChooser fc = new FileChooser();
 			fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image", "*.png*"));
-			fc.setInitialDirectory(new File("C:/Users/apoio.inftb/Desktop/Processamento-Digital-de-Imagens/src/utils/imgs"));
+			fc.setInitialDirectory(new File("C://users/mathe/Desktop/Processamento-Digital-de-Imagens/src/utils/imgs"));
 			File f = fc.showSaveDialog(null);
 			if(f != null){
 				BufferedImage bImg = SwingFXUtils.fromFXImage(img_3, null);
