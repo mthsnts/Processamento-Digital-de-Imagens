@@ -57,6 +57,12 @@ public class Controller {
 	}
 	
 	
+	public void negativa(){
+		img_3 = Pdi.negativa(img_1);
+		updateImage3();
+	}
+	
+	
 	@FXML
 	public void limiar(){
 		double value = slider.getValue();

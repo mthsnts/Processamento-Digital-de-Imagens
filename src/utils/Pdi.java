@@ -22,26 +22,25 @@ public class Pdi {
 				for (int j = 0; j < h; j++) {
 					Color prvsColor = pr.getColor(i, j);
 					double median = 0;
-					if(r == 0 && g == 0 && b == 0){
-					 median = (prvsColor.getRed() + prvsColor.getGreen() + prvsColor.getBlue()) / 3;
-					}else{
-						 median = ((prvsColor.getRed() * r)/100) + ( (prvsColor.getGreen() * g)/100 ) + ( (prvsColor.getBlue()*b)/100)
-								 / 100;
+					if (r == 0 && g == 0 && b == 0) {
+						median = (prvsColor.getRed() + prvsColor.getGreen() + prvsColor.getBlue()) / 3;
+					} else {
+						median = ((prvsColor.getRed() * r) / 100) + ((prvsColor.getGreen() * g) / 100)
+								+ ((prvsColor.getBlue() * b) / 100) / 100;
 					}
 					Color newColor = new Color(median, median, median, prvsColor.getOpacity());
 					pw.setColor(i, j, newColor);
-					}
 				}
+			}
 			return wi;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	
-	public static Image limiar(Image image, double value){
-		greyScale(image, 0,0,0);
+
+	public static Image limiar(Image image, double value) {
+		greyScale(image, 0, 0, 0);
 		try {
 
 			int w = (int) image.getWidth();
@@ -56,20 +55,37 @@ public class Pdi {
 					Color prvsColor = pr.getColor(i, j);
 					double median = 0;
 					Color newColor;
-					if(prvsColor.getRed() >= value){
-						newColor = new Color(1,1,1, prvsColor.getOpacity());
-					}else{
-						newColor = new Color(0,0,0, prvsColor.getOpacity());
+					if (prvsColor.getRed() >= value) {
+						newColor = new Color(1, 1, 1, prvsColor.getOpacity());
+					} else {
+						newColor = new Color(0, 0, 0, prvsColor.getOpacity());
 					}
 					pw.setColor(i, j, newColor);
-					}
 				}
+			}
 			return wi;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
-		}		
+		}
 	}
-	
-	
+
+	public static Image negativa(Image image) {
+		int w = (int) image.getWidth();
+		int h = (int) image.getHeight();
+
+		PixelReader pr = image.getPixelReader();
+		WritableImage wi = new WritableImage(w, h);
+		PixelWriter pw = wi.getPixelWriter();
+
+		for (int i = 0; i < w; i++) {
+			for (int j = 0; j < h; j++) {
+				Color prvsColor = pr.getColor(i, j);
+				Color newColor;
+				newColor = new Color( 255-prvsColor.getRed(), 255-prvsColor.getGreen(), 255-prvsColor.getBlue(), prvsColor.getOpacity());
+				pw.setColor(i, j, newColor);
+			}
+		}
+		return wi;
+	}
 }
