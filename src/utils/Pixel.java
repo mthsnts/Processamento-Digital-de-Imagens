@@ -15,10 +15,5 @@ public class Pixel {
 		this.b = b;
 		this.x = x;
 		this.y = y;
-		this.nghbrX = nghbrX;
-		this.nghbrc = nghbrc;
-		this.nghbr3 = nghbr3;
 	}
-	
-	
 }

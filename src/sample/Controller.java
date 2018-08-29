@@ -11,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -33,6 +34,10 @@ public class Controller {
     @FXML private TextField r_percentage;
     @FXML private TextField g_percentage;
     @FXML private TextField b_percentage;
+    
+    @FXML private RadioButton rX;
+    @FXML private RadioButton rC;
+    @FXML private RadioButton r3;
 
     @FXML private Slider slider;
 	
@@ -67,6 +72,20 @@ public class Controller {
 		value = value / 255;
 		img_3 = Pdi.limiar(img_1, value);
 		updateImage3();
+	}
+	
+	@FXML
+	public void ruido(){
+		if(rX.isSelected()){
+			String tipo = "x";
+			img_3 = Pdi.tiraRuido(img_1, tipo);
+		}else if(rC.isSelected()){
+			String tipo = "cruz";
+			img_3 = Pdi.tiraRuido(img_1, tipo);
+		}else if(r3.isSelected()){
+			String tipo = "3x3";
+			img_3 = Pdi.tiraRuido(img_1, tipo);
+		}
 	}
 	
 	@FXML

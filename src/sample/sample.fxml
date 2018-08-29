@@ -4,10 +4,12 @@
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -140,7 +142,17 @@
                 </TitledPane>
                 <TitledPane animated="false" text="Ruidos">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <RadioButton fx:id="rX" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="ruído em X">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="selectRuido" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="rC" layoutX="14.0" layoutY="40.0" mnemonicParsing="false" text="ruído em cruz" toggleGroup="$selectRuido" />
+                              <RadioButton fx:id="r3" layoutX="14.0" layoutY="66.0" mnemonicParsing="false" text="ruido 3 X 3" toggleGroup="$selectRuido" />
+                              <Button layoutX="14.0" layoutY="106.0" mnemonicParsing="false" onAction="#ruido" text="Tirar ruido" />
+                           </children></AnchorPane>
                   </content>
                 </TitledPane>
               </panes>

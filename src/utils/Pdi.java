@@ -19,11 +19,16 @@ public class Pdi {
 			}
 		}
 	}
-	
-	
-	public static Image tiraRuido(Image image, int r, int g, int b){
-		
-		return image;	
+
+	public static Image tiraRuido(Image image, String tipo) {
+		if (tipo == "x") {
+			
+		} else if (tipo == "cruz") {
+
+		} else if (tipo == "3x3") {
+
+		}
+		return image;
 	}
 
 	public static Image greyScale(Image image, int r, int g, int b) {
@@ -156,14 +161,5 @@ public class Pdi {
 		vizX[8] = p;
 		return vizX;
 	}
-
-	public void mediana(Pixel[] pixels, int c) {
-		double[] v = new double[pixels.length];
-		for (int i = 0; i < pixels.length; i++) {
-			if (c == 'r' || c == 'R') {
-				double mediana = pixels[i].r / 2;
-			}
-		}
-	}
-
+	
 }
