@@ -44,7 +44,6 @@ public class Controller {
 
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter
 				("Imagens", "*.jpg", "*JPG", "**.png", "*PNG", "*.gif", "*.GIF", "*.bmp", "*.BMP"));
-		fileChooser.setInitialDirectory(new File("C://users/mathe/Desktop/Processamento-Digital-de-Imagens/src/utils/imgs"));
 		File img = fileChooser.showOpenDialog(null);
 		try{
 			if(img != null){
@@ -118,7 +117,7 @@ public class Controller {
 	
 	
 	public void save(){
-		if(img_3 == null){
+		if(img_3 != null){
 			FileChooser fc = new FileChooser();
 			fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image", "*.png*"));
 			fc.setInitialDirectory(new File("C://users/mathe/Desktop/Processamento-Digital-de-Imagens/src/utils/imgs"));
@@ -156,7 +155,7 @@ public class Controller {
 		}
 	}
 	
-	private void getRgb(Image img, int x, int y){
+	public void getRgb(Image img, int x, int y){
 		try{
 		Color cor = img.getPixelReader().getColor(x, y);
 		label_R.setText("R: " + (int) (cor.getRed()*255));
