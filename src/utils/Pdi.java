@@ -1,9 +1,16 @@
 package utils;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelFormat;
 import javafx.scene.image.PixelReader;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 public class Pdi {
@@ -22,7 +29,7 @@ public class Pdi {
 
 	public static Image tiraRuido(Image image, String tipo) {
 		if (tipo == "x") {
-			
+
 		} else if (tipo == "cruz") {
 
 		} else if (tipo == "3x3") {
@@ -109,6 +116,112 @@ public class Pdi {
 		return wi;
 	}
 
+	public static Image adicionaBorda(Image img, MouseEvent evt) {
+		int x = (int) evt.getX();
+		int y = (int) evt.getY();
+		int x2 = (int) evt.getX();
+		int y2 = (int) evt.getY();
+
+
+		PixelReader pr = img.getPixelReader();
+		WritableImage wi = new WritableImage(x, y);
+		PixelWriter pw = wi.getPixelWriter();
+
+		for (int i = x; i < x2; i++) {
+				Color newColor;
+				newColor = new Color(1,1,1,1);
+				pw.setColor(x, x2, newColor);
+		}
+			return wi;
+	}
+
+	public static Image giraImgaem(Image img) {
+		int w = (int) img.getWidth();
+		int h = (int) img.getHeight();
+
+		PixelReader pr = img.getPixelReader();
+		WritableImage wi = new WritableImage(w, h);
+		PixelWriter pw = wi.getPixelWriter();
+		for (int i = 0; i < w; i++) {
+			for (int j = 0; j < h; j++) {
+
+			}
+		}
+		return wi;
+	}
+
+	// w-1, h-1
+	public static Image tiraRuido(Image img) {
+		int w = (int) img.getWidth();
+		int h = (int) img.getHeight();
+		for (int i = 0; i < w - 1; i++) {
+			for (int j = 0; j < h - 1; j++) {
+
+			}
+		}
+		return null;
+	}
+
+	public static Image adicao(Image img1, Image img2, double pctImg1, double pctImg2) {
+
+		int w1 = (int) img1.getWidth();
+		int h1 = (int) img1.getHeight();
+		int w2 = (int) img2.getWidth();
+		int h2 = (int) img2.getHeight();
+
+		int h = Math.min(h1, h2);
+		int w = Math.min(w1, w2);
+
+		PixelReader p1 = img1.getPixelReader();
+		PixelReader p2 = img2.getPixelReader();
+
+		WritableImage wi = new WritableImage(w, h);
+		PixelWriter pw = wi.getPixelWriter();
+
+		for (int i = 0; i < w; i++) {
+			for (int j = 0; j < h; j++) {
+
+				Color c1 = p1.getColor(i, j);
+				Color c2 = p2.getColor(i, j);
+
+				Color novaCor = new Color((c1.getRed() * (pctImg1 / 100)) + (c2.getRed() * (pctImg2 / 100)),
+						(c1.getGreen() * (pctImg1 / 100)) + (c2.getGreen() * (pctImg2 / 100)),
+						(c1.getBlue() * (pctImg1 / 100)) + (c2.getBlue() * (pctImg2 / 100)),
+						((c1.getOpacity() * (pctImg1 / 100)) + (c2.getOpacity() * (pctImg2 / 100))));
+
+				pw.setColor(i, j, novaCor);
+			}
+		}
+		return wi;
+	}
+
+	public static Image subtrai(Image img1, Image img2, int pctImg1, int pctImg2) {
+		int w1 = (int) img1.getWidth();
+		int h1 = (int) img1.getHeight();
+		int w2 = (int) img2.getWidth();
+		int h2 = (int) img2.getHeight();
+
+		int h = getMinHeight(h1, h2);
+		int w = getMinWidth(w1, w2);
+		PixelReader p1 = img1.getPixelReader();
+		PixelReader p2 = img2.getPixelReader();
+		WritableImage wi = new WritableImage(w, h);
+		PixelWriter pr = wi.getPixelWriter();
+
+		for (int i = 0; i < w; i++) {
+			for (int j = 0; j < h; j++) {
+				Color c1 = p1.getColor(i, j);
+				Color c2 = p2.getColor(i, j);
+
+				Color novaCor = new Color(c1.getRed() - c2.getRed(), c1.getGreen() - c2.getGreen(),
+						c1.getBlue() - c2.getBlue(), c1.getOpacity() - c2.getOpacity());
+
+				pr.setColor(i, j, novaCor);
+			}
+		}
+		return wi;
+	}
+
 	public static Pixel[] getNghbrX(Image image, Pixel p) {
 		Pixel[] vizX = new Pixel[5];
 		PixelReader pr = image.getPixelReader();
@@ -161,5 +274,16 @@ public class Pdi {
 		vizX[8] = p;
 		return vizX;
 	}
-	
+
+	public static int getMinHeight(int h1, int h2) {
+		System.out.println(h1 > h2 ? h2 : h1);
+		return h1 > h2 ? h2 : h1;
+	}
+
+	public static int getMinWidth(int w1, int w2) {
+		System.out.println(w1 > w2 ? w2 : w1);
+		return w1 > w2 ? w2 : w1;
+
+	}
+
 }

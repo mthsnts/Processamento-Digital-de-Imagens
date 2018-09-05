@@ -40,6 +40,9 @@ public class Controller {
     @FXML private RadioButton r3;
 
     @FXML private Slider slider;
+    
+    @FXML private TextField pctImg1;
+    @FXML private TextField pctImg2;
 	
     private File f;
     private Image img_1, img_2, img_3;
@@ -73,19 +76,17 @@ public class Controller {
 		img_3 = Pdi.limiar(img_1, value);
 		updateImage3();
 	}
+		
+	@FXML
+	public void Adiciona(){
+		img_3 = Pdi.adicao(img_1, img_2, Double.parseDouble(pctImg1.getText()), Double.parseDouble(pctImg2.getText()));
+		updateImage3();
+	}
 	
 	@FXML
-	public void ruido(){
-		if(rX.isSelected()){
-			String tipo = "x";
-			img_3 = Pdi.tiraRuido(img_1, tipo);
-		}else if(rC.isSelected()){
-			String tipo = "cruz";
-			img_3 = Pdi.tiraRuido(img_1, tipo);
-		}else if(r3.isSelected()){
-			String tipo = "3x3";
-			img_3 = Pdi.tiraRuido(img_1, tipo);
-		}
+	public void subtrai(){
+		img_3 = Pdi.subtrai(img_1, img_2, Integer.parseInt(pctImg1.getText()), Integer.parseInt(pctImg2.getText()));
+		updateImage3();
 	}
 	
 	@FXML

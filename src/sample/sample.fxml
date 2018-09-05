@@ -151,10 +151,24 @@
                               </RadioButton>
                               <RadioButton fx:id="rC" layoutX="14.0" layoutY="40.0" mnemonicParsing="false" text="ruído em cruz" toggleGroup="$selectRuido" />
                               <RadioButton fx:id="r3" layoutX="14.0" layoutY="66.0" mnemonicParsing="false" text="ruido 3 X 3" toggleGroup="$selectRuido" />
-                              <Button layoutX="14.0" layoutY="106.0" mnemonicParsing="false" onAction="#ruido" text="Tirar ruido" />
+                              <Button layoutX="14.0" layoutY="106.0" mnemonicParsing="false" onAction="#clear" text="Tirar ruido" />
                            </children></AnchorPane>
                   </content>
                 </TitledPane>
+                  <TitledPane animated="false" text="Adição/Subtração">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#Adiciona" text="Adição" />
+                              <Button layoutX="107.0" layoutY="14.0" mnemonicParsing="false" text="Subtração" />
+                              <TextField fx:id="pctImg1" layoutX="17.0" layoutY="65.0" />
+                              <TextField fx:id="pctImg2" layoutX="17.0" layoutY="111.0" />
+                              <Label layoutX="17.0" layoutY="48.0" text="Porcentagem 1" />
+                              <Label layoutX="14.0" layoutY="90.0" text="Porcenteagem 2" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </TitledPane>
               </panes>
             </Accordion>
          </children>
