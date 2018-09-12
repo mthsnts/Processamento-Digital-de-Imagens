@@ -171,6 +171,11 @@
                   </TitledPane>
               </panes>
             </Accordion>
+            <Button mnemonicParsing="false" onAction="#abreHistograma" text="Histograma">
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
+            </Button>
          </children>
       </VBox>
    </left>

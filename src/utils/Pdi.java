@@ -4,6 +4,11 @@ import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
+import javafx.event.ActionEvent;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelFormat;
@@ -12,6 +17,7 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 public class Pdi {
 
@@ -26,6 +32,72 @@ public class Pdi {
 			}
 		}
 	}
+//	public void gerarHistograma(ActionEvent event){
+//		  try{
+//			  Stage stage = new Stage();
+//			  FXMLLoader loader = new FXMLLoader(getClass().
+//					  getResource("HistogramaModal.fxml"));
+//			  Parent root = loader.load();
+//			  stage.setScene(new Scene(root));
+//			  stage.setTitle("Histograma");
+//			  //stage.initModality(Modality.WINDOW_MODAL);
+//			  stage.initOwner(((Node)event.getSource()).
+//					  getScene().getWindow() );
+//			  stage.show();
+//			  
+//			  HistogramaModalController controller = 
+//					  (HistogramaModalController)loader.getController();
+//			  
+//			  if(imagem1!=null)
+//				  Pdi.getGrafico(imagem1, controller.hist1);
+//			  if(imagem2!=null)
+//				  Pdi.getGrafico(imagem2, controller.hist2);
+//			  if(imagem3!=null)
+//				  Pdi.getGrafico(imagem3, controller.hist3);
+//			  
+//			  
+//		  }catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	  }
+	
+	public static int getValorHist(Image img, int pos){
+		 int[] hist = new int[255];
+			int w = (int) img.getWidth();
+			int h = (int) img.getHeight();
+			PixelReader pr = img.getPixelReader();
+			for (int i = 0; i < w; i++) {
+				for (int j = 0; j < h; j++) {
+					if(i < 254)
+						hist[i] = pr.getArgb(i, j) * -1;
+					
+					}
+				}
+			
+		 return hist[pos];
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public static void getGrafico(Image img,BarChart<String, Number> grafico){
+		CategoryAxis eixoX = new CategoryAxis();
+		NumberAxis eixoY = new NumberAxis();
+	    eixoX.setLabel("Canal");       
+	    eixoY.setLabel("valor");
+	    XYChart.Series vlr = new XYChart.Series();
+	    vlr.setName("Intensidade");
+	    int[] hist = new int[255];
+	    for(int i =0;i < 255; i++){
+		   hist[i] = getValorHist(img, i);
+	    }
+	    
+	    img = greyScale(img, 0, 0, 0);
+//	    int [] hist = new int[] {3,5,3,0,0,2,1,1};
+	    for (int i=0; i<hist.length; i++) {
+	    	vlr.getData().add(new XYChart.Data(i+"", getValorHist(img, i)));
+		}
+	    grafico.getData().addAll(vlr);
+	}
+	
 
 	public static Image tiraRuido(Image image, String tipo) {
 		if (tipo == "x") {
@@ -51,6 +123,7 @@ public class Pdi {
 					double median;
 					if (r == 0 && g == 0 && b == 0) {
 						median = (prvsColor.getRed() + prvsColor.getGreen() + prvsColor.getBlue()) / 3;
+						
 					} else {
 						median = ((prvsColor.getRed() * r) / 100) + ((prvsColor.getGreen() * g) / 100)
 								+ ((prvsColor.getBlue() * b) / 100) / 100;

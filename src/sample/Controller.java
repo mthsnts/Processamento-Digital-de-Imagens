@@ -6,7 +6,12 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -19,6 +24,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import utils.Pdi;
 
 public class Controller {
@@ -152,6 +159,33 @@ public class Controller {
 			}
 		}
 	}
+	
+	@FXML
+	public void abreHistograma(ActionEvent event){
+		try{
+			Stage stage = new Stage();
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("Histograma.fxml"));
+			Parent root = loader.load();
+			stage.setScene(new Scene(root));
+			stage.setTitle("Histograma");
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+			stage.show();
+			
+			HistogramaController cntrllr = (HistogramaController)loader.getController();
+			
+			if(img_1!=null)
+				Pdi.getGrafico(img_1, cntrllr.graph1);
+			if(img_2!=null)
+				Pdi.getGrafico(img_3, cntrllr.graph2);
+			if(img_3!=null)
+				Pdi.getGrafico(img_3, cntrllr.graph3);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
 	
 	private void showMessage(String title, String header, String msg, AlertType type){
 		Alert alert = new Alert(type);
