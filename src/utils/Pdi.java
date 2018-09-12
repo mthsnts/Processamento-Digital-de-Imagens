@@ -70,7 +70,6 @@ public class Pdi {
 				for (int j = 0; j < h; j++) {
 					if(i < 254)
 						hist[i] = pr.getArgb(i, j) * -1;
-					
 					}
 				}
 			
