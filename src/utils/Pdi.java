@@ -32,71 +32,123 @@ public class Pdi {
 			}
 		}
 	}
-//	public void gerarHistograma(ActionEvent event){
-//		  try{
-//			  Stage stage = new Stage();
-//			  FXMLLoader loader = new FXMLLoader(getClass().
-//					  getResource("HistogramaModal.fxml"));
-//			  Parent root = loader.load();
-//			  stage.setScene(new Scene(root));
-//			  stage.setTitle("Histograma");
-//			  //stage.initModality(Modality.WINDOW_MODAL);
-//			  stage.initOwner(((Node)event.getSource()).
-//					  getScene().getWindow() );
-//			  stage.show();
-//			  
-//			  HistogramaModalController controller = 
-//					  (HistogramaModalController)loader.getController();
-//			  
-//			  if(imagem1!=null)
-//				  Pdi.getGrafico(imagem1, controller.hist1);
-//			  if(imagem2!=null)
-//				  Pdi.getGrafico(imagem2, controller.hist2);
-//			  if(imagem3!=null)
-//				  Pdi.getGrafico(imagem3, controller.hist3);
-//			  
-//			  
-//		  }catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	  }
-	
-	public static int getValorHist(Image img, int pos){
-		 int[] hist = new int[255];
-			int w = (int) img.getWidth();
-			int h = (int) img.getHeight();
-			PixelReader pr = img.getPixelReader();
-			for (int i = 0; i < w; i++) {
-				for (int j = 0; j < h; j++) {
-					if(i < 254)
-						hist[i] = pr.getArgb(i, j) * -1;
-					}
-				}
-			
-		 return hist[pos];
+
+
+	public static int getValorHist(Image img, int pos) {
+		int[] hist = new int[256];
+		int[] qt = new int[256];
+		int w = (int) img.getWidth();
+		int h = (int) img.getHeight();
+		PixelReader pr = img.getPixelReader();
+		for (int i = 0; i < w; i++) {
+			for (int j = 0; j < h; j++) {
+				if (i < 254)
+					hist[i] = pr.getArgb(i, j) * -1;
+				qt[(int) (pr.getColor(i, j).getRed() * 255)]++;
+				qt[(int) (pr.getColor(i, j).getBlue() * 255)]++;
+				qt[(int) (pr.getColor(i, j).getGreen() * 255)]++;
+
+			}
+		}
+		return hist[pos];
+	}
+
+	public static int[] getValorHisto(Image img) {
+		int[] qt = new int[256];
+		int w = (int) img.getWidth();
+		int h = (int) img.getHeight();
+		PixelReader pr = img.getPixelReader();
+		for (int i = 0; i < w; i++) {
+			for (int j = 0; j < h; j++) {
+				qt[(int) (pr.getColor(i, j).getRed() * 255)]++;
+				qt[(int) (pr.getColor(i, j).getBlue() * 255)]++;
+				qt[(int) (pr.getColor(i, j).getGreen() * 255)]++;
+			}
+		}
+		return qt;
 	}
 	
+	public static int[] histograma(Image img, int canal) {
+		int[] qt = new int[256];
+		PixelReader pr = img.getPixelReader();
+		int w = (int) img.getWidth();
+		int h = (int) img.getHeight();
+		for (int i = 0; i < w; i++) {
+			for (int j = 0; j < h; j++) {
+				if (canal == 1) {
+					qt[(int) (pr.getColor(i, j).getRed() * 255)]++;
+				} else if (canal == 2) {
+					qt[(int) (pr.getColor(i, j).getGreen() * 255)]++;
+				} else {
+					qt[(int) (pr.getColor(i, j).getBlue() * 255)]++;
+				}
+			}
+		}
+		return qt;
+	}
+
+	public static Image equaliza(Image img) {
+		int w = (int) img.getWidth();
+		int h = (int) img.getHeight();
+		PixelReader pr = img.getPixelReader();
+		WritableImage wi = new WritableImage(w, h);
+		PixelWriter pw = wi.getPixelWriter();
+
+		int[] hR = histograma(img, 1);
+		int[] hG = histograma(img, 2);
+		int[] hB = histograma(img, 3);
+		int[] histAcR = histogramaAc(hR);
+		int[] histAcG = histogramaAc(hG);
+		int[] histAcB = histogramaAc(hB);
+
+		for (int i = 0; i < w; i++) {
+			for (int j = 0; j < h; j++) {
+				Color oldCor = pr.getColor(i, j);
+				double acR = histAcR[(int) (oldCor.getRed() * 255)];
+				double acG = histAcG[(int) (oldCor.getGreen() * 255)];
+				double acB = histAcB[(int) (oldCor.getBlue() * 255)];
+				double n = w * h;
+				double pxR = ((255 - 1) / n) * acR;
+				double pxG = ((255 - 1) / n) * acG;
+				double pxB = ((255 - 1) / n) * acB;
+				double corR = pxR / 255;
+				double corG = pxG / 255;
+				double corB = pxB / 255;
+				Color newCor = new Color(corR, corG, corB, oldCor.getOpacity());
+				pw.setColor(i, j, newCor);
+			}
+		}
+		return wi;
+	}
+
+	public static int[] histogramaAc(int[] hist) {
+		int[] ret = new int[hist.length];
+		int vl = hist[0];
+		for (int i = 0; i < hist.length - 1; i++) {
+			ret[i] = vl;
+			vl += hist[i + 1];
+		}
+		return ret;
+	}
+
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static void getGrafico(Image img,BarChart<String, Number> grafico){
+	public static void getGrafico(Image img, BarChart<String, Number> grafico) {
 		CategoryAxis eixoX = new CategoryAxis();
 		NumberAxis eixoY = new NumberAxis();
-	    eixoX.setLabel("Canal");       
-	    eixoY.setLabel("valor");
-	    XYChart.Series vlr = new XYChart.Series();
-	    vlr.setName("Intensidade");
-	    int[] hist = new int[255];
-	    for(int i =0;i < 255; i++){
-		   hist[i] = getValorHist(img, i);
-	    }
-	    
-	    img = greyScale(img, 0, 0, 0);
-//	    int [] hist = new int[] {3,5,3,0,0,2,1,1};
-	    for (int i=0; i<hist.length; i++) {
-	    	vlr.getData().add(new XYChart.Data(i+"", getValorHist(img, i)));
+		eixoX.setLabel("Canal");
+		eixoY.setLabel("valor");
+		XYChart.Series vlr = new XYChart.Series();
+		vlr.setName("Intensidade");
+		int[] hist = new int[256];
+		for (int i = 0; i < 256; i++) {
+			hist[i] = getValorHist(img, i);
 		}
-	    grafico.getData().addAll(vlr);
+
+		for (int i = 0; i < hist.length; i++) {
+			vlr.getData().add(new XYChart.Data(i + "", getValorHist(img, i)));
+		}
+		grafico.getData().addAll(vlr);
 	}
-	
 
 	public static Image tiraRuido(Image image, String tipo) {
 		if (tipo == "x") {
@@ -122,7 +174,7 @@ public class Pdi {
 					double median;
 					if (r == 0 && g == 0 && b == 0) {
 						median = (prvsColor.getRed() + prvsColor.getGreen() + prvsColor.getBlue()) / 3;
-						
+
 					} else {
 						median = ((prvsColor.getRed() * r) / 100) + ((prvsColor.getGreen() * g) / 100)
 								+ ((prvsColor.getBlue() * b) / 100) / 100;
@@ -194,17 +246,16 @@ public class Pdi {
 		int x2 = (int) evt.getX();
 		int y2 = (int) evt.getY();
 
-
 		PixelReader pr = img.getPixelReader();
 		WritableImage wi = new WritableImage(x, y);
 		PixelWriter pw = wi.getPixelWriter();
 
 		for (int i = x; i < x2; i++) {
-				Color newColor;
-				newColor = new Color(1,1,1,1);
-				pw.setColor(x, x2, newColor);
+			Color newColor;
+			newColor = new Color(1, 1, 1, 1);
+			pw.setColor(x, x2, newColor);
 		}
-			return wi;
+		return wi;
 	}
 
 	public static Image giraImgaem(Image img) {

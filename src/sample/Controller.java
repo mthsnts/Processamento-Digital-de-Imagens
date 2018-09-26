@@ -176,10 +176,13 @@ public class Controller {
 			
 			if(img_1!=null)
 				Pdi.getGrafico(img_1, cntrllr.graph1);
-			if(img_2!=null)
-				Pdi.getGrafico(img_3, cntrllr.graph2);
-			if(img_3!=null)
+				img_3 = Pdi.equaliza(img_1);
+				updateImage3();
 				Pdi.getGrafico(img_3, cntrllr.graph3);
+//			if(img_2!=null)
+//				Pdi.getGrafico(img_2, cntrllr.graph2);
+//			if(img_3!=null)
+//				Pdi.getGrafico(img_3, cntrllr.graph3);
 			
 		}catch(Exception e){
 			e.printStackTrace();
