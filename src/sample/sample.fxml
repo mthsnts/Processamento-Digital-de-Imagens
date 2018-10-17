@@ -52,6 +52,15 @@
    <left>
       <VBox prefHeight="725.0" prefWidth="184.0" BorderPane.alignment="CENTER">
          <children>
+            <TitledPane animated="false" text="OpenCV">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="44.0" layoutY="65.0" mnemonicParsing="false" text="Detectar Faces" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
             <Accordion>
               <panes>
                   <TitledPane animated="false" text="Limiar">

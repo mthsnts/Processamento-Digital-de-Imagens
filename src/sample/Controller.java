@@ -27,7 +27,15 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import utils.Pdi;
-
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.MatOfRect;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+import org.opencv.objdetect.CascadeClassifier;
 public class Controller {
 
 	@FXML private ImageView image_view_1;
@@ -54,6 +62,7 @@ public class Controller {
     private File f;
     private Image img_1, img_2, img_3;
 
+    
 	private File selectImage(){
 		FileChooser fileChooser = new FileChooser();
 
@@ -71,10 +80,37 @@ public class Controller {
 	}
 	
 	@FXML
+	public void detectaFaces(){
+		f = selectImage();
+		String path = f.getAbsolutePath();
+		
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+		CascadeClassifier faceDetector = new CascadeClassifier("haarcascade_frontalface_alt.xml");
+		Mat image = Imgcodecs.imread("rostos.jpg");
+
+		MatOfRect faceDetections = new MatOfRect();
+		faceDetector.detectMultiScale(image, faceDetections);
+
+		System.out.println(String.format("Detected %s faces", faceDetections.toArray().length));
+
+		for (Rect rect : faceDetections.toArray()) {
+			Imgproc.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height),
+					new Scalar(0, 255, 0));
+		}
+
+		String filename = "ouput.png";
+		System.out.println(String.format("Writing %s", filename));
+		Imgcodecs.imwrite(filename, image);
+	}
+	
+	
+	@FXML
 	public void negativa(){
 		img_3 = Pdi.negativa(img_1);
 		updateImage3();
 	}
+	
 
 	@FXML
 	public void limiar(){
