@@ -33,9 +33,13 @@ import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
+import org.opencv.highgui.HighGui;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
+import utils.OpenCVUtils;
+
 public class Controller {
 
 	@FXML private ImageView image_view_1;
@@ -58,10 +62,18 @@ public class Controller {
     
     @FXML private TextField pctImg1;
     @FXML private TextField pctImg2;
+    
+    @FXML
+    private TextField krnlsz;
+
+    @FXML
+    private TextField tp;
 	
     private File f;
     private Image img_1, img_2, img_3;
-
+    private OpenCVUtils converter;
+    private Mat matImgSrc;
+    private Mat matImgDst = new Mat();
     
 	private File selectImage(){
 		FileChooser fileChooser = new FileChooser();
@@ -79,29 +91,48 @@ public class Controller {
 		return null;
 	}
 	
+//	@FXML
+//	public void detectaFaces(){
+//		f = selectImage();
+//		String path = f.getAbsolutePath();
+//		
+//		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+//
+//		CascadeClassifier faceDetector = new CascadeClassifier("haarcascade_frontalface_alt.xml");
+//		Mat image = Imgcodecs.imread("rostos.jpg");
+//
+//		MatOfRect faceDetections = new MatOfRect();
+//		faceDetector.detectMultiScale(image, faceDetections);
+//
+//		System.out.println(String.format("Detected %s faces", faceDetections.toArray().length));
+//
+//		for (Rect rect : faceDetections.toArray()) {
+//			Imgproc.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height),
+//					new Scalar(0, 255, 0));
+//		}
+//
+//		String filename = "ouput.png";
+//		System.out.println(String.format("Writing %s", filename));
+//		Imgcodecs.imwrite(filename, image);
+//	}
+	
 	@FXML
-	public void detectaFaces(){
-		f = selectImage();
-		String path = f.getAbsolutePath();
-		
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-		CascadeClassifier faceDetector = new CascadeClassifier("haarcascade_frontalface_alt.xml");
-		Mat image = Imgcodecs.imread("rostos.jpg");
-
-		MatOfRect faceDetections = new MatOfRect();
-		faceDetector.detectMultiScale(image, faceDetections);
-
-		System.out.println(String.format("Detected %s faces", faceDetections.toArray().length));
-
-		for (Rect rect : faceDetections.toArray()) {
-			Imgproc.rectangle(image, new Point(rect.x, rect.y), new Point(rect.x + rect.width, rect.y + rect.height),
-					new Scalar(0, 255, 0));
-		}
-
-		String filename = "ouput.png";
-		System.out.println(String.format("Writing %s", filename));
-		Imgcodecs.imwrite(filename, image);
+	public void erosaoDilatacao(){
+		int kernelSize = Integer.parseInt(krnlsz.getText());
+		String tipo = tp.getText();
+		 matImgSrc = OpenCVUtils.image2Mat(img_1);
+		 Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_RECT, new Size(2 * kernelSize + 1, 2 * kernelSize + 1),
+	                new Point(kernelSize, kernelSize));
+	        if (tipo.equals("erosão")) {
+	            Imgproc.erode(matImgSrc, matImgDst, element);
+	        } else {
+	            Imgproc.dilate(matImgSrc, matImgDst, element);
+	        }
+//	        java.awt.Image imagem = HighGui.toBufferedImage(matImgDst);
+	        Image imgTest = OpenCVUtils.matrixToImage(matImgDst);
+	        img_3 = imgTest;
+	        updateImage3();
+	        
 	}
 	
 	
