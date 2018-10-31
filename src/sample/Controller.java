@@ -28,6 +28,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import utils.Pdi;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
@@ -83,7 +84,10 @@ public class Controller {
 
 	@FXML
 	private TextField tp;
-
+    private static final Size BLUR_SIZE = new Size(3,3);
+    private static final int MAX_LOW_THRESHOLD = 100;
+    private static final int RATIO = 3;
+    private static final int KERNEL_SIZE = 3;
 	private File f;
 	private Image img_1, img_2, img_3;
 	private OpenCVUtils converter;
@@ -150,7 +154,24 @@ public class Controller {
 		Image imgTest = OpenCVUtils.matrixToImage(matImgDst);
 		img_3 = imgTest;
 		updateImage3();
+	}
+	
+	@FXML
+	public void canny(){
+    	System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		Mat src = OpenCVUtils.imageToMat(img_1);
+	    Mat srcBlur = new Mat();
+	    Mat detectedEdges = new Mat();
+	    Mat dst = new Mat();
+	    int lowThresh = 0;
 
+		   Imgproc.blur(src, srcBlur, BLUR_SIZE);
+	        Imgproc.Canny(srcBlur, detectedEdges, lowThresh, lowThresh * RATIO, KERNEL_SIZE, false);
+	        dst = new Mat(src.size(), CvType.CV_8UC3, Scalar.all(0));
+	        src.copyTo(dst, detectedEdges);
+	        Image imgTest = OpenCVUtils.matrixToImage(dst);
+			img_3 = imgTest;
+			updateImage3();
 	}
 
 	@FXML
