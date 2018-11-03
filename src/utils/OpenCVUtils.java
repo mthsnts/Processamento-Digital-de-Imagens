@@ -18,7 +18,6 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import org.opencv.highgui.Highgui;
 import org.opencv.imgcodecs.Imgcodecs;
 
 public class OpenCVUtils {
@@ -28,7 +27,7 @@ public class OpenCVUtils {
 	
 	public static Image matrixToImage(Mat mat){
 		MatOfByte byteMat = new MatOfByte();
-		Highgui.imencode(".bmp", mat, byteMat);
+		Imgcodecs.imencode(".bmp", mat, byteMat);
 		return new Image(new ByteArrayInputStream(byteMat.toArray()));
 	}
 	 /**

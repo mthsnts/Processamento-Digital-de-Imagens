@@ -15,10 +15,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="825.0" prefWidth="961.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<BorderPane prefHeight="768.0" prefWidth="1366.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <top>
       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER_RIGHT">
          <children>
+            <Button mnemonicParsing="false" onAction="#abreHistograma" text="Histograma" />
             <VBox prefHeight="200.0" prefWidth="100.0" />
             <Label fx:id="label_R" text="R:" textFill="#bf1919">
                <HBox.margin>
@@ -50,14 +51,13 @@
    <left>
       <VBox prefHeight="725.0" prefWidth="184.0" BorderPane.alignment="CENTER">
          <children>
-            <TitledPane animated="false" text="OpenCV">
+            <TitledPane animated="false" text="Erosão/Dilatação">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
                         <TextField fx:id="krnlsz" layoutX="17.0" layoutY="14.0" promptText="Kernelsize" />
                         <TextField fx:id="tp" layoutX="17.0" layoutY="49.0" promptText="Tipo" />
-                        <Button layoutX="14.0" layoutY="90.0" mnemonicParsing="false" onAction="#erosaoDilatacao" text="Executar" />
-                        <Button layoutX="91.0" layoutY="90.0" mnemonicParsing="false" onAction="#canny" text="Canny" />
+                        <Button layoutX="23.0" layoutY="130.0" mnemonicParsing="false" onAction="#erosaoDilatacao" text="Erosão/dilatação" />
                      </children>
                   </AnchorPane>
               </content>
@@ -165,13 +165,28 @@
                         </AnchorPane>
                     </content>
                   </TitledPane>
+                  <TitledPane animated="false" text="Canny">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TextField fx:id="threshold" layoutX="19.0" layoutY="45.0" promptText="Threshold" />
+                              <Button layoutX="67.0" layoutY="90.0" mnemonicParsing="false" onAction="#canny" text="Canny" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </TitledPane>
+                  <TitledPane animated="false" text="Sobel">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="330.0" prefWidth="182.0">
+                           <children>
+                              <Button layoutX="80.0" layoutY="128.0" mnemonicParsing="false" onAction="#sobel" text="Sobel" />
+                              <Slider fx:id="sobelSlider" blockIncrement="2.0" layoutX="14.0" layoutY="20.0" majorTickUnit="2.0" max="31.0" min="1.0" minorTickCount="2" orientation="VERTICAL" prefHeight="283.0" prefWidth="35.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </TitledPane>
               </panes>
             </Accordion>
-            <Button mnemonicParsing="false" onAction="#abreHistograma" text="Histograma">
-               <VBox.margin>
-                  <Insets left="10.0" top="10.0" />
-               </VBox.margin>
-            </Button>
          </children>
       </VBox>
    </left>
@@ -214,14 +229,14 @@
                   </ScrollPane>
                </children>
             </VBox>
-            <VBox layoutX="248.0" layoutY="10.0" prefHeight="700.0" prefWidth="238.0">
+            <VBox layoutX="248.0" layoutY="10.0" prefHeight="668.0" prefWidth="603.0">
                <children>
                 
-                  <ScrollPane prefHeight="484.0" prefWidth="238.0">
+                  <ScrollPane prefHeight="517.0" prefWidth="550.0">
                      <content>
-                        <AnchorPane prefHeight="450.0" prefWidth="250.0">
+                        <AnchorPane prefHeight="444.0" prefWidth="588.0">
                            <children>
-                              <ImageView fx:id="image_view_3" fitHeight="218.0" fitWidth="248.0" layoutX="25.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="232.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="0.0" />
+                              <ImageView fx:id="image_view_3" fitHeight="513.0" fitWidth="586.0" layoutX="25.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="0.0" />
                            </children>
                         </AnchorPane>
                      </content>
