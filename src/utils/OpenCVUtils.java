@@ -26,6 +26,7 @@ public class OpenCVUtils {
 	
 	
 	public static Image matrixToImage(Mat mat){
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		MatOfByte byteMat = new MatOfByte();
 		Imgcodecs.imencode(".bmp", mat, byteMat);
 		return new Image(new ByteArrayInputStream(byteMat.toArray()));
@@ -38,6 +39,7 @@ public class OpenCVUtils {
      * @return the {@link Image} to show
      */
     public static Image mat2Image(Mat frame) {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         // create a temporary buffer
         MatOfByte buffer = new MatOfByte();
         // encode the frame in the buffer, according to the PNG format
@@ -49,6 +51,7 @@ public class OpenCVUtils {
 
 
     public static Mat image2Mat( Image image) {
+    	 System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
 
         BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
@@ -75,6 +78,8 @@ public class OpenCVUtils {
     // http://www.codeproject.com/Tips/752511/How-to-Convert-Mat-to-BufferedImage-Vice-Versa
     public static Mat bufferedImage2Mat(BufferedImage in)
     {
+    	 System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
           Mat out;
           byte[] data;
           int r, g, b;
@@ -120,6 +125,7 @@ public class OpenCVUtils {
     // Convert image to Mat
     // alternate version http://stackoverflow.com/questions/21740729/converting-bufferedimage-to-mat-opencv-in-java
     public static Mat bufferedImage2Mat_v2(BufferedImage im) {
+    	 System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
         im = toBufferedImageOfType(im, BufferedImage.TYPE_3BYTE_BGR);
 
@@ -138,6 +144,8 @@ public class OpenCVUtils {
     }
 
     private static BufferedImage toBufferedImageOfType(BufferedImage original, int type) {
+    	 System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
         if (original == null) {
             throw new IllegalArgumentException("original == null");
         }

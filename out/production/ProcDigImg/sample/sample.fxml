@@ -187,6 +187,7 @@
                   </TitledPane>
               </panes>
             </Accordion>
+            <Button mnemonicParsing="false" onAction="#contraste" text="contraste" />
          </children>
       </VBox>
    </left>

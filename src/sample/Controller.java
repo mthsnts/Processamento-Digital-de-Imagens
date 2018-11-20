@@ -27,6 +27,11 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import utils.Pdi;
+import ij.plugin.*;
+import ij.plugin.filter.*;
+import ij.process.ColorProcessor;
+import ij.process.ImageProcessor;
+
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -40,10 +45,10 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.objdetect.CascadeClassifier;
 import utils.OpenCVUtils;
-
+import ij.plugin.ContrastEnhancer;
 import static oracle.jrockit.jfr.events.Bits.intValue;
 import static org.opencv.core.CvType.CV_8U;
-
+import ij.*;
 public class Controller {
 
     @FXML
@@ -142,6 +147,42 @@ public class Controller {
         img_3 = OpenCVUtils.matrixToImage(matImgDst);
         updateImage3();
     }
+    
+    @FXML
+    public void contraste(){
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        Mat source = OpenCVUtils.image2Mat(Pdi.greyScale(img_1,0,0,0));
+        Mat destination = new Mat(source.rows(),source.cols(),source.type());
+        Imgproc.equalizeHist(source, destination);
+    	double alpha = 1.0;
+    	int beta = 0;
+    	Mat image = OpenCVUtils.imageToMat(img_1);
+    	Mat newImage = Mat.zeros(image.size(), image.type());
+    	byte[] imageData = new byte[(int) (image.total()*image.channels())];
+    	image.get(0, 0, imageData);
+    	byte[] newImageData = new byte[(int) (newImage.total()*newImage.channels())];
+        for (int y = 0; y < image.rows(); y++) {
+            for (int x = 0; x < image.cols(); x++) {
+                for (int c = 0; c < image.channels(); c++) {
+                    double pixelValue = imageData[(y * image.cols() + x) * image.channels() + c];
+                    pixelValue = pixelValue < 0 ? pixelValue + 256 : pixelValue;
+                    newImageData[(y * image.cols() + x) * image.channels() + c]
+                            = saturate(alpha * pixelValue + beta);
+                }
+            }
+        }
+        newImage.put(0, 0, newImageData);
+        img_3 = OpenCVUtils.matrixToImage(newImage);
+        updateImage3();
+       
+    }
+    
+    private byte saturate(double val) {
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        int iVal = (int) Math.round(val);
+        iVal = iVal > 255 ? 255 : (iVal < 0 ? 0 : iVal);
+        return (byte) iVal;
+    }
 
     @FXML
     public void canny() {
@@ -159,28 +200,29 @@ public class Controller {
         updateImage3();
     }
 
-    @FXML
+    @SuppressWarnings("deprecation")
+	@FXML
     public void sobel() {
-        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        Mat grad = new Mat();
-        Mat src_gray = new Mat();
-
-        if (img_1 != null) {
-            Mat src = OpenCVUtils.imageToMat(img_1);
-            Imgproc.GaussianBlur(src, src, new Size(3, 3), 0, 0, Core.BORDER_DEFAULT);
-            Imgproc.cvtColor(src, src_gray, Imgproc.COLOR_RGB2GRAY);
-            Mat grad_x = new Mat(), grad_y = new Mat();
-            Mat abs_grad_x = new Mat(), abs_grad_y = new Mat();
-            if(intValue(sobelSlider.getValue()) % 2 != 0) {
-                Imgproc.Sobel(src_gray, grad_x, ddepth, 1, 0, intValue(sobelSlider.getValue()), scale, delta, Core.BORDER_DEFAULT);
-                Imgproc.Sobel(src_gray, grad_y, ddepth, 0, 1, intValue(sobelSlider.getValue()), scale, delta, Core.BORDER_DEFAULT);
-                Core.convertScaleAbs(grad_x, abs_grad_x);
-                Core.convertScaleAbs(grad_y, abs_grad_y);
-                Core.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad);
-                img_3 = OpenCVUtils.matrixToImage(grad);
-                updateImage3();
-            }
-        }
+//        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+//        Mat grad = new Mat();
+//        Mat src_gray = new Mat();
+//
+//        if (img_1 != null) {
+//            Mat src = OpenCVUtils.imageToMat(img_1);
+//            Imgproc.GaussianBlur(src, src, new Size(3, 3), 0, 0, Core.BORDER_DEFAULT);
+//            Imgproc.cvtColor(src, src_gray, Imgproc.COLOR_RGB2GRAY);
+//            Mat grad_x = new Mat(), grad_y = new Mat();
+//            Mat abs_grad_x = new Mat(), abs_grad_y = new Mat();
+//            if(intValue(sobelSlider.getValue()) % 2 != 0) {
+//                Imgproc.Sobel(src_gray, grad_x, ddepth, 1, 0, intValue(sobelSlider.getValue()), scale, delta, Core.BORDER_DEFAULT);
+//                Imgproc.Sobel(src_gray, grad_y, ddepth, 0, 1, intValue(sobelSlider.getValue()), scale, delta, Core.BORDER_DEFAULT);
+//                Core.convertScaleAbs(grad_x, abs_grad_x);
+//                Core.convertScaleAbs(grad_y, abs_grad_y);
+//                Core.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad);
+//                img_3 = OpenCVUtils.matrixToImage(grad);
+//                updateImage3();
+//            }
+//        }
 
     }
 
