@@ -318,7 +318,7 @@ public class Pdi {
 		return wi;
 	}
 
-	public static Image subtrai(Image img1, Image img2, int pctImg1, int pctImg2) {
+	public static Image subtrai(Image img1, Image img2, double pctImg1, double pctImg2) {
 		int w1 = (int) img1.getWidth();
 		int h1 = (int) img1.getHeight();
 		int w2 = (int) img2.getWidth();
@@ -336,8 +336,10 @@ public class Pdi {
 				Color c1 = p1.getColor(i, j);
 				Color c2 = p2.getColor(i, j);
 
-				Color novaCor = new Color(c1.getRed() - c2.getRed(), c1.getGreen() - c2.getGreen(),
-						c1.getBlue() - c2.getBlue(), c1.getOpacity() - c2.getOpacity());
+				Color novaCor = new Color((c1.getRed() * (pctImg1 / 100)) - (c2.getRed() * (pctImg2 / 100)),
+						(c1.getGreen() * (pctImg1 / 100)) - (c2.getGreen() * (pctImg2 / 100)),
+						(c1.getBlue() * (pctImg1 / 100)) - (c2.getBlue() * (pctImg2 / 100)),
+						((c1.getOpacity() * (pctImg1 / 100)) - (c2.getOpacity() * (pctImg2 / 100))));
 
 				pr.setColor(i, j, novaCor);
 			}

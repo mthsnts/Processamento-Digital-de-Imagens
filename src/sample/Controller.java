@@ -87,6 +87,12 @@ public class Controller {
     private TextField krnlsz;
 
     @FXML
+    private TextField txtAlpha;
+
+    @FXML
+    private TextField txtBeta;
+
+    @FXML
     private TextField sobelKernel;
 
 
@@ -132,7 +138,7 @@ public class Controller {
         String tipo = tp.getText();
         matImgSrc = OpenCVUtils.imageToMat(img_1);
         Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_RECT,
-                new Size(2 * kernelSize + 1, 2 * kernelSize + 1), new Point(kernelSize, kernelSize));
+                new Size(2 * kernelSize + 1, 2 * kernelSize + 1), new Point(9, 9));
         if (tipo.equals("erosão")) {
             Imgproc.erode(matImgSrc, matImgDst, element);
         } else {
@@ -177,10 +183,54 @@ public class Controller {
                 Core.convertScaleAbs(grad_x, abs_grad_x);
                 Core.convertScaleAbs(grad_y, abs_grad_y);
                 Core.addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad);
-                img_3 = OpenCVUtils.matrixToImage(grad);
+                img_3 = Pdi.negativa(OpenCVUtils.matrixToImage(grad));
                 updateImage3();
             }
         }
+    }
+
+    private byte saturate(double val) {
+        int iVal = (int) Math.round(val);
+        iVal = iVal > 255 ? 255 : (iVal < 0 ? 0 : iVal);
+        return (byte) iVal;
+    }
+
+    @FXML
+    public void contraste(){
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        Mat image = OpenCVUtils.imageToMat(img_1);
+        Mat newImage = Mat.zeros(image.size(), image.type());
+        double alpha = Double.parseDouble(txtAlpha.getText()); /*< Simple contrast control */
+        int beta = Integer.parseInt(txtBeta.getText());       /*< Simple brightness control */
+        byte[] imageData = new byte[(int) (image.total()*image.channels())];
+        image.get(0, 0, imageData);
+        byte[] newImageData = new byte[(int) (newImage.total()*newImage.channels())];
+        for (int y = 0; y < image.rows(); y++) {
+            for (int x = 0; x < image.cols(); x++) {
+                for (int c = 0; c < image.channels(); c++) {
+                    double pixelValue = imageData[(y * image.cols() + x) * image.channels() + c];
+                    pixelValue = pixelValue < 0 ? pixelValue + 256 : pixelValue;
+                    newImageData[(y * image.cols() + x) * image.channels() + c]
+                            = saturate(alpha * pixelValue + beta);
+                }
+            }
+        }
+        newImage.put(0, 0, newImageData);
+        img_3 = OpenCVUtils.matrixToImage(newImage);
+        updateImage3();
+
+    }
+
+    @FXML
+    public void equalizar(){
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        Mat src = OpenCVUtils.imageToMat(img_1);
+        Imgproc.cvtColor(src, src, Imgproc.COLOR_BGR2GRAY);
+        Mat dst = new Mat();
+        Imgproc.equalizeHist( src, dst );
+
+        img_3 = OpenCVUtils.mat2Image(dst);
+        updateImage3();
 
     }
 
@@ -190,12 +240,16 @@ public class Controller {
         updateImage3();
     }
 
+
+
+
     @FXML
     public void limiar() {
-        double value = slider.getValue();
+        double value = 110;//slider.getValue();
         value = value / 255;
         img_3 = Pdi.limiar(img_1, value);
         updateImage3();
+        System.out.print(value);
     }
 
     @FXML
@@ -206,7 +260,7 @@ public class Controller {
 
     @FXML
     public void subtrai() {
-        img_3 = Pdi.subtrai(img_1, img_2, Integer.parseInt(pctImg1.getText()), Integer.parseInt(pctImg2.getText()));
+        img_3 = Pdi.subtrai(img_1, img_2, Double.parseDouble(pctImg1.getText()), Double.parseDouble(pctImg2.getText()));
         updateImage3();
     }
 
@@ -239,6 +293,12 @@ public class Controller {
         image_view_3.setFitHeight(img_3.getHeight());
     }
 
+    @FXML
+    private void updateImage2(){
+        image_view_2.setImage(img_2);
+        image_view_2.setFitWidth(img_2.getWidth());
+        image_view_2.setFitHeight(img_2.getHeight());
+    }
     @FXML
     public void greyScaleMedian() {
         img_3 = Pdi.greyScale(img_1, 0, 0, 0);
@@ -330,6 +390,27 @@ public class Controller {
             label_B.setText("B: " + (int) (cor.getBlue() * 255));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void salvar() {
+        if(img_3 != null) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imagem", "*.png"));
+            fileChooser.setInitialDirectory(new File("C:/Users/mathe/Desktop"));
+            File file = fileChooser.showSaveDialog(null);
+
+            if(file != null) {
+                BufferedImage bImg = SwingFXUtils.fromFXImage(img_3, null);
+                try {
+                    ImageIO.write(bImg, "PNG", file);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
     }
 }
