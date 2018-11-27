@@ -1,10 +1,5 @@
 package sample;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-
-import javax.imageio.ImageIO;
-
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,37 +7,27 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import utils.Pdi;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfRect;
-import org.opencv.core.Point;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.highgui.HighGui;
-import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
-import org.opencv.objdetect.CascadeClassifier;
 import utils.OpenCVUtils;
+import utils.Pdi;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static oracle.jrockit.jfr.events.Bits.intValue;
-import static org.opencv.core.CvType.CV_8U;
 
 public class Controller {
 
@@ -113,6 +98,7 @@ public class Controller {
     int ddepth = CvType.CV_16S;
     int scale = 1;
     int delta = 0;
+    private Random rng = new Random(12345);
 
     private File selectImage() {
         FileChooser fileChooser = new FileChooser();
@@ -177,7 +163,7 @@ public class Controller {
             Imgproc.cvtColor(src, src_gray, Imgproc.COLOR_RGB2GRAY);
             Mat grad_x = new Mat(), grad_y = new Mat();
             Mat abs_grad_x = new Mat(), abs_grad_y = new Mat();
-            if(intValue(sobelSlider.getValue()) % 2 != 0) {
+            if (intValue(sobelSlider.getValue()) % 2 != 0) {
                 Imgproc.Sobel(src_gray, grad_x, ddepth, 1, 0, intValue(sobelSlider.getValue()), scale, delta, Core.BORDER_DEFAULT);
                 Imgproc.Sobel(src_gray, grad_y, ddepth, 0, 1, intValue(sobelSlider.getValue()), scale, delta, Core.BORDER_DEFAULT);
                 Core.convertScaleAbs(grad_x, abs_grad_x);
@@ -195,16 +181,17 @@ public class Controller {
         return (byte) iVal;
     }
 
+
     @FXML
-    public void contraste(){
+    public void contraste() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         Mat image = OpenCVUtils.imageToMat(img_1);
         Mat newImage = Mat.zeros(image.size(), image.type());
         double alpha = Double.parseDouble(txtAlpha.getText()); /*< Simple contrast control */
         int beta = Integer.parseInt(txtBeta.getText());       /*< Simple brightness control */
-        byte[] imageData = new byte[(int) (image.total()*image.channels())];
+        byte[] imageData = new byte[(int) (image.total() * image.channels())];
         image.get(0, 0, imageData);
-        byte[] newImageData = new byte[(int) (newImage.total()*newImage.channels())];
+        byte[] newImageData = new byte[(int) (newImage.total() * newImage.channels())];
         for (int y = 0; y < image.rows(); y++) {
             for (int x = 0; x < image.cols(); x++) {
                 for (int c = 0; c < image.channels(); c++) {
@@ -222,12 +209,12 @@ public class Controller {
     }
 
     @FXML
-    public void equalizar(){
+    public void equalizar() {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         Mat src = OpenCVUtils.imageToMat(img_1);
         Imgproc.cvtColor(src, src, Imgproc.COLOR_BGR2GRAY);
         Mat dst = new Mat();
-        Imgproc.equalizeHist( src, dst );
+        Imgproc.equalizeHist(src, dst);
 
         img_3 = OpenCVUtils.mat2Image(dst);
         updateImage3();
@@ -241,11 +228,9 @@ public class Controller {
     }
 
 
-
-
     @FXML
     public void limiar() {
-        double value = 110;//slider.getValue();
+        double value = 128.0;//slider.getValue();
         value = value / 255;
         img_3 = Pdi.limiar(img_1, value);
         updateImage3();
@@ -294,11 +279,12 @@ public class Controller {
     }
 
     @FXML
-    private void updateImage2(){
+    private void updateImage2() {
         image_view_2.setImage(img_2);
         image_view_2.setFitWidth(img_2.getWidth());
         image_view_2.setFitHeight(img_2.getHeight());
     }
+
     @FXML
     public void greyScaleMedian() {
         img_3 = Pdi.greyScale(img_1, 0, 0, 0);
@@ -395,13 +381,13 @@ public class Controller {
 
     @FXML
     public void salvar() {
-        if(img_3 != null) {
+        if (img_3 != null) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imagem", "*.png"));
             fileChooser.setInitialDirectory(new File("C:/Users/mathe/Desktop"));
             File file = fileChooser.showSaveDialog(null);
 
-            if(file != null) {
+            if (file != null) {
                 BufferedImage bImg = SwingFXUtils.fromFXImage(img_3, null);
                 try {
                     ImageIO.write(bImg, "PNG", file);
@@ -412,5 +398,64 @@ public class Controller {
             }
 
         }
+    }
+
+    @FXML
+    public void contour() {
+
+        Mat src = OpenCVUtils.image2Mat(Pdi.greyScale(img_1, 0, 0, 0));
+        Mat cannyOutput = new Mat();
+        Imgproc.Canny(src, cannyOutput, 5, 5 * 3, 3, false);
+        List<MatOfPoint> contours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(cannyOutput, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+        Mat drawing = Mat.zeros(cannyOutput.size(), CvType.CV_8UC3);
+        for (int i = 0; i < contours.size(); i++) {
+            Scalar color = new Scalar(rng.nextInt(256), rng.nextInt(256), rng.nextInt(256));
+            Imgproc.drawContours(drawing, contours, i, color, 2, Core.LINE_8, hierarchy, 0, new Point());
+        }
+        img_3 = OpenCVUtils.mat2Image(drawing);
+        updateImage3();
+    }
+
+
+    @FXML
+    public void diagnose() {
+        int perimetro = 0;
+        int controle = 0;
+        int brancos = 0;
+        int w = (int) img_1.getWidth();
+        int h = (int) img_1.getHeight();
+        PixelReader pr = img_1.getPixelReader();
+        WritableImage wi = new WritableImage(w, h);
+        PixelWriter pw = wi.getPixelWriter();
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                Color cor = pr.getColor(i, j);
+                System.out.println("teste = " + cor.getRed() + "/" + cor.getGreen());
+
+                if (cor.getRed() == 1.0 && cor.getGreen() == 1.0 && cor.getBlue() == 1.0) {
+                    brancos += 1;
+                    if (pr.getColor(i, j - 1).getRed() != 1.0 || pr.getColor(i, j - 1).getGreen() == 1.0 || pr.getColor(i, j - 1).getBlue() == 1.0) {
+                        controle += 1;
+                    }
+                    if (pr.getColor(i, j + 1).getRed() != 1.0 || pr.getColor(i, j + 1).getGreen() == 1.0 || pr.getColor(i, j + 1).getBlue() == 1.0) {
+                        controle += 1;
+                    }
+                    if (pr.getColor(i - 1, j).getRed() != 1.0 || pr.getColor(i - 1, j).getGreen() == 1.0 || pr.getColor(i - 1, j).getBlue() == 1.0) {
+                        controle += 1;
+                    }
+                    if (pr.getColor(i + 1, j).getRed() != 1.0 || pr.getColor(i + 1, j - 1).getGreen() == 1.0 || pr.getColor(i + 1, j - 1).getBlue() == 1.0) {
+                        controle += 1;
+                    }
+
+                    if (controle > 0 && controle < 4) {
+                        perimetro += 1;
+                    }
+                    controle = 0;
+                }
+            }
+        }
+        System.out.println("Razão = " + perimetro + "/" + brancos);
     }
 }
